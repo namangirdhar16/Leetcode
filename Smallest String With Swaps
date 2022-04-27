@@ -1,0 +1,50 @@
+class Solution {
+public:
+    map<int, vector<int>> adj;
+    bool vis[100005];
+    void dfs(int src, vector<int> &temp) {
+        if(vis[src]) return;
+        vis[src] = true;
+        // vector<int> temp;
+        temp.push_back(src);
+        for(auto it: adj[src]) {
+            if(!vis[it]) {
+                //temp.push_back(it);
+                dfs(it, temp);
+            }
+        }
+        
+    }
+    string smallestStringWithSwaps(string s, vector<vector<int>>& pairs) {
+        memset(vis, false, sizeof vis);
+        for(auto it: pairs) {
+            adj[it[0]].push_back(it[1]);
+            adj[it[1]].push_back(it[0]);
+        }
+        vector<vector<int>> conn_comp;
+        int n = s.size();
+        for(int i = 0; i < n; i++) {
+            if(!vis[i]) {
+                vector<int> temp;
+                dfs(i, temp);
+                conn_comp.push_back(temp);
+            }
+        }
+        for(auto &it: conn_comp) {
+            vector<char> vec;
+            for(auto it2: it) {
+                vec.push_back(s[it2]);
+            }
+            
+            sort(vec.begin(), vec.end());
+            int l = 0;
+            sort(it.begin(), it.end());
+            for(auto it2: it) {
+                s[it2] = vec[l++];
+            }
+        }
+        // cout << endl;
+        return s;
+        
+    }
+}; 
